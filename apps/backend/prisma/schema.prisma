@@ -1,0 +1,79 @@
+generator client {
+  provider     = "prisma-client"
+  output       = "../src/generated/prisma"
+  moduleFormat = "cjs"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum OrderStatus {
+  PLACED
+  SHIPPED
+  DELIVERED
+}
+
+enum MessageRole {
+  USER
+  AGENT
+}
+
+// A user is a customer of the demo store, not an admin: orders belong to them
+// and the agent only ever sees the signed-in customer's orders.
+model User {
+  id           String   @id @default(uuid())
+  email        String   @unique
+  passwordHash String
+  name         String
+  createdAt    DateTime @default(now())
+
+  orders        Order[]
+  conversations Conversation[]
+}
+
+model Order {
+  id           String      @id @default(uuid())
+  number       String      @unique
+  userId       String
+  user         User        @relation(fields: [userId], references: [id])
+  status       OrderStatus
+  eta          String
+  trackingCode String?
+  total        Decimal
+  currency     String
+  createdAt    DateTime    @default(now())
+
+  @@index([userId])
+}
+
+model Conversation {
+  id        String    @id @default(uuid())
+  userId    String
+  user      User      @relation(fields: [userId], references: [id])
+  escalated Boolean   @default(false)
+  // "New chat" closes the conversation instead of deleting it: past dialogs
+  // stay readable on the Conversations screen.
+  closedAt  DateTime?
+  createdAt DateTime  @default(now())
+
+  messages Message[]
+
+  @@index([userId])
+}
+
+model Message {
+  id             String       @id @default(uuid())
+  // Replay order for the model. createdAt cannot carry it: both messages of a
+  // turn are written in one statement and share a timestamp.
+  seq            Int          @default(autoincrement()) @unique
+  conversationId String
+  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  role           MessageRole
+  text           String
+  // TurnTrace from @support-agent/contracts; only AGENT messages carry one.
+  trace          Json?
+  createdAt      DateTime     @default(now())
+
+  @@index([conversationId])
+}

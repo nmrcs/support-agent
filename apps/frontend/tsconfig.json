@@ -1,0 +1,19 @@
+{
+	"extends": "../../tsconfig.base.json",
+	"compilerOptions": {
+		"lib": ["ES2022", "DOM", "DOM.Iterable"],
+		"jsx": "react-jsx",
+		"types": ["vite/client"],
+		"useDefineForClassFields": true,
+		"moduleDetection": "force",
+		"resolveJsonModule": true,
+		"noUnusedLocals": true,
+		"noUnusedParameters": true,
+		"noFallthroughCasesInSwitch": true,
+		// vite emits; tsc only typechecks here. declaration from the base config is
+		// incompatible with noEmit, so it is switched off explicitly.
+		"noEmit": true,
+		"declaration": false
+	},
+	"include": ["src", "vite.config.ts"]
+}

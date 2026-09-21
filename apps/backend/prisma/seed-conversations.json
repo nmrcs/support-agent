@@ -1,0 +1,405 @@
+[
+	{
+		"email": "alice@example.com",
+		"closed": true,
+		"escalated": false,
+		"messages": [
+			{
+				"role": "USER",
+				"text": "Hi!"
+			},
+			{
+				"role": "AGENT",
+				"text": "Hello! Welcome to Acme Store support. How can I help you today?",
+				"trace": {
+					"steps": [
+						{
+							"ok": true,
+							"kind": "llm",
+							"name": "chat",
+							"latencyMs": 2641
+						}
+					],
+					"usage": {
+						"promptTokens": 673,
+						"completionTokens": 62
+					},
+					"escalated": false
+				}
+			},
+			{
+				"role": "USER",
+				"text": "where is my order?"
+			},
+			{
+				"role": "AGENT",
+				"text": "I can help you track your order! Could you please share your order number?",
+				"trace": {
+					"steps": [
+						{
+							"ok": true,
+							"kind": "llm",
+							"name": "chat",
+							"latencyMs": 2629
+						}
+					],
+					"usage": {
+						"promptTokens": 704,
+						"completionTokens": 115
+					},
+					"escalated": false
+				}
+			},
+			{
+				"role": "USER",
+				"text": "1001"
+			},
+			{
+				"role": "AGENT",
+				"text": "Good news, your order 1001 has been shipped and is expected to be delivered in 2 business days. The tracking code is TRK-84121-XA. You can use this to track your package online.",
+				"trace": {
+					"steps": [
+						{
+							"ok": true,
+							"kind": "llm",
+							"name": "chat",
+							"detail": "requested get_order_status",
+							"latencyMs": 2041
+						},
+						{
+							"ok": true,
+							"kind": "tool",
+							"name": "get_order_status",
+							"detail": "{\"found\":true,\"number\":\"1001\",\"status\":\"SHIPPED\",\"eta\":\"2 business days\",\"trackingCode\":\"TRK-84121-XA\"}",
+							"latencyMs": 5
+						},
+						{
+							"ok": true,
+							"kind": "llm",
+							"name": "chat",
+							"latencyMs": 1635
+						}
+					],
+					"usage": {
+						"promptTokens": 1554,
+						"completionTokens": 127
+					},
+					"escalated": false
+				}
+			}
+		]
+	},
+	{
+		"email": "alice@example.com",
+		"closed": true,
+		"escalated": true,
+		"messages": [
+			{
+				"role": "USER",
+				"text": "Hi!"
+			},
+			{
+				"role": "AGENT",
+				"text": "Hello! Welcome to Acme Store. How can I help you today? 😊",
+				"trace": {
+					"steps": [
+						{
+							"ok": true,
+							"kind": "llm",
+							"name": "chat",
+							"latencyMs": 2331
+						}
+					],
+					"usage": {
+						"promptTokens": 673,
+						"completionTokens": 92
+					},
+					"escalated": false
+				}
+			},
+			{
+				"role": "USER",
+				"text": "Where is my order 1001?"
+			},
+			{
+				"role": "AGENT",
+				"text": "Good news, order #1001 is currently SHIPPED. It's expected to arrive in 2 business days, and your tracking code is TRK-84121-XA. Let me know if there's anything else you need!",
+				"trace": {
+					"steps": [
+						{
+							"ok": true,
+							"kind": "llm",
+							"name": "chat",
+							"detail": "requested get_order_status",
+							"latencyMs": 2222
+						},
+						{
+							"ok": true,
+							"kind": "tool",
+							"name": "get_order_status",
+							"detail": "{\"found\":true,\"number\":\"1001\",\"status\":\"SHIPPED\",\"eta\":\"2 business days\",\"trackingCode\":\"TRK-84121-XA\"}",
+							"latencyMs": 3
+						},
+						{
+							"ok": true,
+							"kind": "llm",
+							"name": "chat",
+							"latencyMs": 2726
+						}
+					],
+					"usage": {
+						"promptTokens": 1506,
+						"completionTokens": 197
+					},
+					"escalated": false
+				}
+			},
+			{
+				"role": "USER",
+				"text": "Where is order 5555?"
+			},
+			{
+				"role": "AGENT",
+				"text": "I'm sorry, but I couldn't find order #5555 in our system. Could you please double-check the order number and let me know if you see it written anywhere on your confirmation email?",
+				"trace": {
+					"steps": [
+						{
+							"ok": true,
+							"kind": "llm",
+							"name": "chat",
+							"detail": "requested get_order_status",
+							"latencyMs": 1837
+						},
+						{
+							"ok": true,
+							"kind": "tool",
+							"name": "get_order_status",
+							"detail": "{\"found\":false}",
+							"latencyMs": 3
+						},
+						{
+							"ok": true,
+							"kind": "llm",
+							"name": "chat",
+							"latencyMs": 4259
+						}
+					],
+					"usage": {
+						"promptTokens": 1617,
+						"completionTokens": 269
+					},
+					"escalated": false
+				}
+			},
+			{
+				"role": "USER",
+				"text": "I want to talk to a human"
+			},
+			{
+				"role": "AGENT",
+				"text": "I've handed you over to a human specialist who will assist you right away. Thank you for your patience!",
+				"trace": {
+					"steps": [
+						{
+							"ok": true,
+							"kind": "llm",
+							"name": "chat",
+							"detail": "requested escalate_to_human",
+							"latencyMs": 4766
+						},
+						{
+							"ok": true,
+							"kind": "tool",
+							"name": "escalate_to_human",
+							"detail": "{\"handedOver\":true}",
+							"latencyMs": 6
+						},
+						{
+							"ok": true,
+							"kind": "llm",
+							"name": "chat",
+							"latencyMs": 1778
+						}
+					],
+					"usage": {
+						"promptTokens": 1743,
+						"completionTokens": 302
+					},
+					"escalated": true,
+					"escalationReason": "agent called escalate_to_human"
+				}
+			}
+		]
+	},
+	{
+		"email": "alice@example.com",
+		"closed": true,
+		"escalated": false,
+		"messages": [
+			{
+				"role": "USER",
+				"text": "Hi!"
+			},
+			{
+				"role": "AGENT",
+				"text": "Hello! Welcome to Acme Store. How can I help you today?",
+				"trace": {
+					"steps": [
+						{
+							"ok": true,
+							"kind": "llm",
+							"name": "chat",
+							"latencyMs": 1964
+						}
+					],
+					"usage": {
+						"promptTokens": 673,
+						"completionTokens": 80
+					},
+					"escalated": false
+				}
+			},
+			{
+				"role": "USER",
+				"text": "Where is my order 1001?"
+			},
+			{
+				"role": "AGENT",
+				"text": "Good news, your order 1001 has been shipped and is estimated to arrive in 2 business days. Here is your tracking code: TRK-84121-XA.",
+				"trace": {
+					"steps": [
+						{
+							"ok": true,
+							"kind": "llm",
+							"name": "chat",
+							"detail": "requested get_order_status",
+							"latencyMs": 2157
+						},
+						{
+							"ok": true,
+							"kind": "tool",
+							"name": "get_order_status",
+							"detail": "{\"found\":true,\"number\":\"1001\",\"status\":\"SHIPPED\",\"eta\":\"2 business days\",\"trackingCode\":\"TRK-84121-XA\"}",
+							"latencyMs": 2
+						},
+						{
+							"ok": true,
+							"kind": "llm",
+							"name": "chat",
+							"latencyMs": 2965
+						}
+					],
+					"usage": {
+						"promptTokens": 1502,
+						"completionTokens": 203
+					},
+					"escalated": false
+				}
+			},
+			{
+				"role": "USER",
+				"text": "Where is order 5555?"
+			},
+			{
+				"role": "AGENT",
+				"text": "I couldn't find order 5555 in our system. Could you please double-check the order number?",
+				"trace": {
+					"steps": [
+						{
+							"ok": true,
+							"kind": "llm",
+							"name": "chat",
+							"detail": "requested get_order_status",
+							"latencyMs": 2584
+						},
+						{
+							"ok": true,
+							"kind": "tool",
+							"name": "get_order_status",
+							"detail": "{\"found\":false}",
+							"latencyMs": 3
+						},
+						{
+							"ok": true,
+							"kind": "llm",
+							"name": "chat",
+							"latencyMs": 2524
+						}
+					],
+					"usage": {
+						"promptTokens": 1589,
+						"completionTokens": 196
+					},
+					"escalated": false
+				}
+			}
+		]
+	},
+	{
+		"email": "alice@example.com",
+		"closed": false,
+		"escalated": false,
+		"messages": [
+			{
+				"role": "USER",
+				"text": "Hi!"
+			},
+			{
+				"role": "AGENT",
+				"text": "Hello! How can I help you today?",
+				"trace": {
+					"steps": [
+						{
+							"ok": true,
+							"kind": "llm",
+							"name": "chat",
+							"latencyMs": 1563
+						}
+					],
+					"usage": {
+						"promptTokens": 673,
+						"completionTokens": 53
+					},
+					"escalated": false
+				}
+			},
+			{
+				"role": "USER",
+				"text": "Where is my order 1001?"
+			},
+			{
+				"role": "AGENT",
+				"text": "Your order 1001 has been SHIPPED. It is estimated to arrive in 2 business days. Your tracking code is TRK-84121-XA.",
+				"trace": {
+					"steps": [
+						{
+							"ok": true,
+							"kind": "llm",
+							"name": "chat",
+							"detail": "requested get_order_status",
+							"latencyMs": 2058
+						},
+						{
+							"ok": true,
+							"kind": "tool",
+							"name": "get_order_status",
+							"detail": "{\"found\":true,\"number\":\"1001\",\"status\":\"SHIPPED\",\"eta\":\"2 business days\",\"trackingCode\":\"TRK-84121-XA\"}",
+							"latencyMs": 4
+						},
+						{
+							"ok": true,
+							"kind": "llm",
+							"name": "chat",
+							"latencyMs": 1913
+						}
+					],
+					"usage": {
+						"promptTokens": 1490,
+						"completionTokens": 148
+					},
+					"escalated": false
+				}
+			}
+		]
+	}
+]

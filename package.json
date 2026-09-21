@@ -1,0 +1,37 @@
+{
+	"name": "support-agent",
+	"version": "0.1.0",
+	"private": true,
+	"description": "A first-line support agent you can stand up in an evening: one NestJS backend, an LLM that calls tools, a chat frontend",
+	"author": "Nikita MRCS",
+	"license": "MIT",
+	"workspaces": [
+		"packages/*",
+		"apps/*"
+	],
+	"scripts": {
+		"build": "npm run build --workspaces --if-present",
+		"dev": "concurrently -n backend,frontend -c blue,magenta \"npm run dev -w @support-agent/backend\" \"npm run dev -w @support-agent/frontend\"",
+		"db:reset": "npm run db:reset -w @support-agent/backend",
+		"bench": "tsx scripts/bench.ts",
+		"lint": "eslint .",
+		"lint:fix": "eslint . --fix",
+		"format": "prettier --write \"**/*.{ts,tsx,js,mjs,json,md,yml,yaml,css,html}\"",
+		"format:check": "prettier --check \"**/*.{ts,tsx,js,mjs,json,md,yml,yaml,css,html}\""
+	},
+	"dependencies": {
+		"@support-agent/contracts": "*"
+	},
+	"devDependencies": {
+		"@eslint/js": "^9.39.5",
+		"concurrently": "^9.1.2",
+		"eslint": "^9.39.5",
+		"eslint-config-prettier": "^9.1.2",
+		"eslint-plugin-react-hooks": "^5.0.0",
+		"eslint-plugin-react-refresh": "^0.4.0",
+		"prettier": "^3.9.5",
+		"tsx": "^4.19.0",
+		"typescript": "^5.6.0",
+		"typescript-eslint": "^8.63.0"
+	}
+}

@@ -1,0 +1,23 @@
+{
+	"extends": "../../tsconfig.base.json",
+	"compilerOptions": {
+		// NestJS is compiled by tsc to CommonJS and needs decorators; the base
+		// ESNext/bundler settings do not fit here.
+		"module": "commonjs",
+		"moduleResolution": "node",
+		"experimentalDecorators": true,
+		"emitDecoratorMetadata": true,
+		"allowSyntheticDefaultImports": true,
+		"isolatedModules": false,
+		"removeComments": true,
+		"forceConsistentCasingInFileNames": true,
+		"incremental": true,
+		"sourceMap": true,
+		"outDir": "./dist",
+		"baseUrl": "./"
+	},
+	// prisma/seed.ts runs through tsx and is not needed in dist: including it
+	// lifts the common root to the package and emits dist/src/main.js.
+	"include": ["src"],
+	"exclude": ["node_modules", "dist"]
+}
