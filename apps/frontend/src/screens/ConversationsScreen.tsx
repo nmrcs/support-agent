@@ -1,8 +1,9 @@
-import { useEffect, useState } from 'react'
-import { Chip, Table } from '@heroui/react'
+import { Alert, Chip, Table } from '@heroui/react'
 import type { ConversationSummary } from '@support-agent/contracts'
+import { useEffect, useState } from 'react'
 import { listConversations } from '../api/client'
 import { ConversationDrawer } from '../components/conversations/ConversationDrawer'
+import { formatDate } from '../lib/format'
 
 export function ConversationsScreen() {
 	const [items, setItems] = useState<ConversationSummary[]>([])
@@ -27,15 +28,22 @@ export function ConversationsScreen() {
 	}, [])
 
 	return (
-		<div className="flex h-full flex-col">
-			<div className="flex items-center justify-between border-b border-neutral-800 px-6 py-3">
-				<span className="text-sm font-medium">Conversations</span>
-				<span className="text-xs text-neutral-500">
-					{loading ? '...' : `${items.length} conversations`}
-				</span>
-			</div>
-			<div className="flex-1 overflow-y-auto p-6">
-				{error && <div className="mb-4 text-sm text-red-400">{error}</div>}
+		<div className="h-full overflow-y-auto">
+			<div className="mx-auto flex max-w-7xl flex-col gap-8 px-4 pt-10 pb-16 sm:px-6 sm:pt-14">
+				<section>
+					<h1 className="font-display text-4xl sm:text-5xl">Conversations</h1>
+					<p className="tabular mt-3 text-muted">
+						{loading ? '...' : `${items.length} conversations`}
+					</p>
+				</section>
+				{error && (
+					<Alert status="danger">
+						<Alert.Indicator />
+						<Alert.Content>
+							<Alert.Description>{error}</Alert.Description>
+						</Alert.Content>
+					</Alert>
+				)}
 				<Table>
 					<Table.ScrollContainer>
 						<Table.Content
@@ -50,20 +58,22 @@ export function ConversationsScreen() {
 								<Table.Column id="status">Status</Table.Column>
 								<Table.Column id="escalation">Escalation</Table.Column>
 								<Table.Column id="last">Last message</Table.Column>
-								<Table.Column id="msgs">Msgs</Table.Column>
+								<Table.Column id="msgs" className="text-right">
+									Msgs
+								</Table.Column>
 							</Table.Header>
 							<Table.Body
 								items={items}
 								renderEmptyState={() => (
-									<div className="py-16 text-center text-sm text-neutral-500">
+									<div className="py-16 text-center text-sm text-muted">
 										{loading ? 'Loading...' : 'No conversations yet'}
 									</div>
 								)}
 							>
 								{(c: ConversationSummary) => (
-									<Table.Row id={c.id}>
+									<Table.Row id={c.id} className="cursor-pointer">
 										<Table.Cell>
-											<span className="text-xs text-neutral-400">
+											<span className="tabular text-sm whitespace-nowrap text-muted">
 												{formatDate(c.startedAt)}
 											</span>
 										</Table.Cell>
@@ -82,16 +92,16 @@ export function ConversationsScreen() {
 													escalated
 												</Chip>
 											) : (
-												<span className="text-neutral-600">—</span>
+												<span className="text-muted">—</span>
 											)}
 										</Table.Cell>
 										<Table.Cell>
-											<span className="max-w-md text-sm text-neutral-300 line-clamp-1">
+											<span className="line-clamp-1 max-w-xl text-sm">
 												{c.lastMessage ?? '—'}
 											</span>
 										</Table.Cell>
-										<Table.Cell>
-											<span className="text-xs text-neutral-400">
+										<Table.Cell className="text-right">
+											<span className="tabular text-sm text-muted">
 												{c.messageCount}
 											</span>
 										</Table.Cell>
@@ -105,14 +115,4 @@ export function ConversationsScreen() {
 			<ConversationDrawer id={openId} onClose={() => setOpenId(null)} />
 		</div>
 	)
-}
-
-function formatDate(iso: string): string {
-	const d = new Date(iso)
-	return d.toLocaleString('en-GB', {
-		day: '2-digit',
-		month: 'short',
-		hour: '2-digit',
-		minute: '2-digit',
-	})
 }

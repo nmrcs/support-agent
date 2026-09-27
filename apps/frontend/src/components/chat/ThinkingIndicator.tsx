@@ -1,14 +1,10 @@
-import { Avatar } from '@heroui/react'
+import { Spinner } from '@heroui/react'
 
 export function ThinkingIndicator() {
 	return (
-		<div className="flex gap-3">
-			<Avatar className="size-8 shrink-0">
-				<Avatar.Fallback>AI</Avatar.Fallback>
-			</Avatar>
-			<div className="flex-1 min-w-0 pt-1.5">
-				<span className="text-shimmer text-sm">Thinking...</span>
-			</div>
+		<div className="flex items-center gap-2.5 text-sm text-muted">
+			<Spinner size="sm" color="current" />
+			<span>Thinking...</span>
 		</div>
 	)
 }

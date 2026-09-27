@@ -14,7 +14,7 @@ to a human when asked — or when it stops converging.
 
 ## Quickstart
 
-You need three things: Node 22+, Docker, and a model to talk to — an API key
+You need three things: Node 24+, Docker, and a model to talk to — an API key
 from any OpenAI-compatible provider (OpenRouter is the easy path), or LM Studio
 running locally with a model loaded.
 
@@ -43,16 +43,16 @@ as long as it supports tool calling: the backend sends `tools` with every
 request.
 
 ```bash
-# 3. Frontend config. The default points at localhost:4001 — keep it.
+# 3. Frontend config. The default points at localhost:3001 — keep it.
 cp apps/frontend/.env.example apps/frontend/.env
 
 # 4. Install, migrate + seed demo customers with orders, run.
 npm install
 npm run db:reset
-npm run dev        # backend on :4001, frontend on :4000
+npm run dev        # backend on :3001, frontend on :3000
 ```
 
-Open http://localhost:4000 and log in as `alice@example.com` / `demo`
+Open http://localhost:3000 and log in as `alice@example.com` / `demo`
 (`bob@example.com` / `demo` works too). Ask where order `1001` is, then ask
 for a human.
 

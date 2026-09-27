@@ -1,5 +1,6 @@
-import { useEffect, useRef } from 'react'
 import { Button, Spinner, Surface } from '@heroui/react'
+import { type ReactNode, useEffect, useRef } from 'react'
+import { ArrowUpIcon } from '../Icons'
 
 export function PromptInput({
 	value,
@@ -7,12 +8,15 @@ export function PromptInput({
 	onSubmit,
 	loading = false,
 	placeholder = 'Type a message...',
+	leading,
 }: {
 	value: string
 	onChange: (v: string) => void
 	onSubmit: () => void
 	loading?: boolean
 	placeholder?: string
+	// Actions on the left of the send button, inside the field.
+	leading?: ReactNode
 }) {
 	const textareaRef = useRef<HTMLTextAreaElement>(null)
 
@@ -33,7 +37,7 @@ export function PromptInput({
 	}
 
 	return (
-		<Surface className="rounded-2xl border border-neutral-800 focus-within:border-neutral-700 transition">
+		<Surface className="rounded-[1.75rem] border border-border bg-[color-mix(in_oklab,var(--surface)_72%,transparent)] shadow-lg shadow-black/10 backdrop-blur-xl backdrop-saturate-150 transition focus-within:border-(--focus)">
 			<textarea
 				ref={textareaRef}
 				value={value}
@@ -42,41 +46,24 @@ export function PromptInput({
 				placeholder={placeholder}
 				rows={1}
 				aria-label="Message input"
-				className="block min-h-12 w-full resize-none bg-transparent px-4 pt-3.5 pb-1 text-sm text-neutral-100 placeholder:text-neutral-500 outline-none"
+				className="block min-h-12 w-full resize-none bg-transparent px-5 pt-4 pb-1 text-sm outline-none placeholder:text-muted"
 			/>
-			<div className="flex items-center justify-end px-2 pb-2">
+			<div className="flex items-center justify-between gap-2 px-2.5 pb-2.5">
+				<div>{leading}</div>
 				<Button
 					isIconOnly
-					variant="primary"
 					onPress={onSubmit}
 					isDisabled={!canSend}
 					aria-label="Send"
-					className="rounded-full size-9 min-w-9"
+					className="size-9 min-w-9 rounded-full"
 				>
-					{loading ? <Spinner color="current" size="sm" /> : <ArrowUpIcon />}
+					{loading ? (
+						<Spinner size="sm" color="current" />
+					) : (
+						<ArrowUpIcon className="size-4" />
+					)}
 				</Button>
 			</div>
 		</Surface>
-	)
-}
-
-function ArrowUpIcon() {
-	return (
-		<svg
-			fill="none"
-			height="16"
-			viewBox="0 0 16 16"
-			width="16"
-			xmlns="http://www.w3.org/2000/svg"
-			className="size-4"
-			aria-hidden
-		>
-			<path
-				clipRule="evenodd"
-				d="M8 14.75a.75.75 0 0 1-.75-.75V3.81L4.53 6.53a.75.75 0 0 1-1.06-1.06l4-4a.75.75 0 0 1 1.06 0l4 4a.75.75 0 0 1-1.06 1.06L8.75 3.81V14a.75.75 0 0 1-.75.75"
-				fill="currentColor"
-				fillRule="evenodd"
-			/>
-		</svg>
 	)
 }

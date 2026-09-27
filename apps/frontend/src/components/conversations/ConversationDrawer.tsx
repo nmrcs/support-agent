@@ -1,8 +1,9 @@
-import { useEffect, useState } from 'react'
-import { Chip, Drawer } from '@heroui/react'
-import { useOverlayTriggerState } from 'react-stately'
+import { Alert, Chip, Drawer, Spinner } from '@heroui/react'
 import type { ConversationDetail } from '@support-agent/contracts'
+import { useEffect, useState } from 'react'
+import { useOverlayTriggerState } from 'react-stately'
 import { getConversation } from '../../api/client'
+import { formatDate } from '../../lib/format'
 import { AssistantMessage } from '../chat/AssistantMessage'
 import { UserMessage } from '../chat/UserMessage'
 
@@ -44,67 +45,65 @@ export function ConversationDrawer({
 		<Drawer state={state}>
 			<Drawer.Backdrop>
 				<Drawer.Content placement="right">
-					<Drawer.Dialog className="w-full max-w-3xl p-0!">
-						<Drawer.Header className="px-6 py-4">
-							<div className="flex flex-col gap-1.5">
-								<Drawer.Heading className="flex items-center gap-2">
-									<span className="font-mono text-sm text-neutral-400">
-										{(conversation?.id ?? id ?? '').slice(0, 8)}
-									</span>
-									{conversation && (
-										<>
-											<Chip
-												size="sm"
-												variant="soft"
-												color={conversation.closedAt ? 'default' : 'success'}
-											>
-												{conversation.closedAt ? 'closed' : 'open'}
-											</Chip>
-											{conversation.escalated && (
-												<Chip size="sm" variant="soft" color="warning">
-													escalated
-												</Chip>
-											)}
-										</>
-									)}
+					<Drawer.Dialog className="w-full max-w-2xl p-0!">
+						<Drawer.Header className="border-b border-separator px-6 py-4">
+							<div className="flex flex-col gap-2">
+								<Drawer.Heading className="font-mono text-sm font-normal text-muted">
+									{(conversation?.id ?? id ?? '').slice(0, 8)}
 								</Drawer.Heading>
 								{conversation && (
-									<div className="text-xs text-neutral-500">
-										started {formatDate(conversation.startedAt)} ·{' '}
-										{conversation.messages.length} messages
+									<div className="flex flex-wrap items-center gap-2">
+										<Chip
+											size="sm"
+											variant="soft"
+											color={conversation.closedAt ? 'default' : 'success'}
+										>
+											{conversation.closedAt ? 'closed' : 'open'}
+										</Chip>
+										{conversation.escalated && (
+											<Chip size="sm" variant="soft" color="warning">
+												escalated
+											</Chip>
+										)}
+										<span className="tabular text-xs text-muted">
+											started {formatDate(conversation.startedAt)} ·{' '}
+											{conversation.messages.length} messages
+										</span>
 									</div>
 								)}
 							</div>
 							<Drawer.CloseTrigger />
 						</Drawer.Header>
-						<Drawer.Body className="p-0! overflow-y-auto">
-							<div className="px-6 py-6">
+						<Drawer.Body className="overflow-y-auto p-0!">
+							<div className="flex flex-col gap-6 px-6 py-6">
 								{error && (
-									<div className="mb-4 text-sm text-red-400">{error}</div>
+									<Alert status="danger">
+										<Alert.Indicator />
+										<Alert.Content>
+											<Alert.Description>{error}</Alert.Description>
+										</Alert.Content>
+									</Alert>
 								)}
 								{!conversation && !error && (
-									<div className="text-sm text-neutral-500">Loading...</div>
-								)}
-								{conversation && (
-									<div className="flex flex-col gap-8">
-										{conversation.messages.map((m, i) =>
-											m.role === 'USER' ? (
-												<UserMessage key={i} text={m.text} />
-											) : (
-												<AssistantMessage
-													key={i}
-													text={m.text}
-													trace={m.trace}
-													escalated={m.trace?.escalated}
-												/>
-											),
-										)}
-										{conversation.messages.length === 0 && (
-											<div className="text-center text-sm text-neutral-500">
-												No messages
-											</div>
-										)}
+									<div className="flex items-center gap-2.5 text-sm text-muted">
+										<Spinner size="sm" color="current" />
+										Loading...
 									</div>
+								)}
+								{conversation?.messages.map((m, i) =>
+									m.role === 'USER' ? (
+										<UserMessage key={i} text={m.text} />
+									) : (
+										<AssistantMessage
+											key={i}
+											text={m.text}
+											trace={m.trace}
+											escalated={m.trace?.escalated}
+										/>
+									),
+								)}
+								{conversation?.messages.length === 0 && (
+									<p className="text-center text-sm text-muted">No messages</p>
 								)}
 							</div>
 						</Drawer.Body>
@@ -113,14 +112,4 @@ export function ConversationDrawer({
 			</Drawer.Backdrop>
 		</Drawer>
 	)
-}
-
-function formatDate(iso: string): string {
-	const d = new Date(iso)
-	return d.toLocaleString('en-GB', {
-		day: '2-digit',
-		month: 'short',
-		hour: '2-digit',
-		minute: '2-digit',
-	})
 }

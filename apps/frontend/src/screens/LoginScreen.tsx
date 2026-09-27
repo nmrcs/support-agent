@@ -1,8 +1,8 @@
+import { Alert, Button, Card, Input, Label, TextField } from '@heroui/react'
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Button, Card, Input, Label, Spinner, TextField } from '@heroui/react'
-import { AcmeMark } from '../App'
 import { login } from '../api/client'
+import { AcmeMark } from '../components/Icons'
 import { useSession } from '../store/session'
 
 export function LoginScreen() {
@@ -32,65 +32,59 @@ export function LoginScreen() {
 	}
 
 	return (
-		<div className="min-h-screen w-full flex flex-col items-center justify-center gap-8 bg-neutral-950 px-4">
-			<AcmeMark />
-			<Card className="w-full max-w-md bg-transparent border border-neutral-800 shadow-none">
-				<Card.Header className="px-5 pt-5 pb-4">
-					<Card.Title className="text-xl/7 font-semibold tracking-tight text-neutral-50">
+		<div className="flex min-h-dvh w-full flex-col items-center justify-center gap-8 px-4">
+			<AcmeMark className="size-10" />
+			<Card className="w-full max-w-sm gap-6 p-7">
+				<Card.Header className="gap-2">
+					<Card.Title className="font-display text-2xl leading-tight">
 						Login to your account
 					</Card.Title>
-					<Card.Description className="text-sm/6 text-neutral-400 text-pretty">
+					<Card.Description>
 						Enter your email below to login to your account
 					</Card.Description>
 				</Card.Header>
-				<Card.Content className="px-5 py-4">
+				<Card.Content>
 					<form
 						id="login-form"
 						onSubmit={submit}
 						className="flex flex-col gap-5"
 					>
 						<TextField
-							variant="secondary"
 							type="email"
 							value={email}
 							onChange={setEmail}
 							isRequired
 						>
-							<Label className="text-sm/6 font-medium text-neutral-200">
-								Email
-							</Label>
+							<Label>Email</Label>
 							<Input placeholder="alice@example.com" autoComplete="email" />
 						</TextField>
 						<TextField
-							variant="secondary"
 							type="password"
 							value={password}
 							onChange={setPassword}
 							isRequired
 						>
-							<Label className="text-sm/6 font-medium text-neutral-200">
-								Password
-							</Label>
+							<Label>Password</Label>
 							<Input autoComplete="current-password" />
 						</TextField>
 						{error && (
-							<div className="text-sm/6 text-red-400" role="alert">
-								{error}
-							</div>
+							<Alert status="danger">
+								<Alert.Indicator />
+								<Alert.Content>
+									<Alert.Description>{error}</Alert.Description>
+								</Alert.Content>
+							</Alert>
 						)}
 					</form>
 				</Card.Content>
-				<Card.Footer className="px-5 pt-4 pb-5">
+				<Card.Footer>
 					<Button
 						type="submit"
 						form="login-form"
-						variant="primary"
+						fullWidth
 						isPending={submitting}
-						className="w-full"
 					>
-						{({ isPending }) =>
-							isPending ? <Spinner color="current" size="sm" /> : 'Login'
-						}
+						Login
 					</Button>
 				</Card.Footer>
 			</Card>

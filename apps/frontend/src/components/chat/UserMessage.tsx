@@ -1,9 +1,12 @@
+import { Surface } from '@heroui/react'
+
 export function UserMessage({ text }: { text: string }) {
 	return (
-		<div className="flex justify-end">
-			<div className="max-w-[85%] rounded-2xl bg-neutral-800/70 px-4 py-2.5 text-sm text-neutral-100">
-				<p className="whitespace-pre-wrap">{text}</p>
-			</div>
-		</div>
+		<Surface
+			variant="secondary"
+			className="ml-auto w-fit max-w-[85%] rounded-3xl px-5 py-3 text-sm leading-relaxed whitespace-pre-wrap"
+		>
+			{text}
+		</Surface>
 	)
 }

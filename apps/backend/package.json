@@ -8,7 +8,7 @@
 	"scripts": {
 		"prebuild": "prisma generate",
 		"build": "nest build",
-		"predev": "prisma generate; lsof -ti:4001 | xargs kill -9 2>/dev/null; true",
+		"predev": "prisma generate; lsof -ti:3001 | xargs kill -9 2>/dev/null; true",
 		"dev": "nest start --watch",
 		"start:prod": "node dist/main",
 		"db:reset": "prisma migrate reset --force"
@@ -36,7 +36,7 @@
 		"@nestjs/schematics": "^11.0.0",
 		"@types/bcrypt": "^6.0.0",
 		"@types/express": "^5.0.0",
-		"@types/node": "^22.0.0",
+		"@types/node": "^24.0.0",
 		"@types/passport-jwt": "^4.0.1",
 		"dotenv": "^17.0.0",
 		"prisma": "^7.10.0",

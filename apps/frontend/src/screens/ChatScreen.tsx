@@ -1,12 +1,13 @@
-import { useEffect, useRef, useState } from 'react'
-import { Button, ScrollShadow } from '@heroui/react'
+import { Alert, Button, ScrollShadow } from '@heroui/react'
 import type { ChatMessage } from '@support-agent/contracts'
+import { useEffect, useRef, useState } from 'react'
 import { getHistory, resetChat, sendMessage } from '../api/client'
 import { AssistantMessage } from '../components/chat/AssistantMessage'
 import { PromptInput } from '../components/chat/PromptInput'
 import { PromptSuggestions } from '../components/chat/PromptSuggestions'
 import { ThinkingIndicator } from '../components/chat/ThinkingIndicator'
 import { UserMessage } from '../components/chat/UserMessage'
+import { RestartIcon } from '../components/Icons'
 
 export function ChatScreen() {
 	const [messages, setMessages] = useState<ChatMessage[]>([])
@@ -28,7 +29,7 @@ export function ChatScreen() {
 	useEffect(() => {
 		const el = scrollRef.current
 		if (el) el.scrollTop = el.scrollHeight
-	}, [messages, inFlight])
+	}, [messages, inFlight, error])
 
 	async function sendTurn(text: string): Promise<void> {
 		if (inFlight) return
@@ -68,16 +69,10 @@ export function ChatScreen() {
 	}
 
 	return (
-		<div className="flex h-full flex-col">
-			{messages.length > 0 && (
-				<div className="flex items-center justify-end border-b border-neutral-800 px-6 py-2">
-					<Button size="sm" variant="primary" onPress={() => void onNewChat()}>
-						New chat
-					</Button>
-				</div>
-			)}
-			<ScrollShadow ref={scrollRef} className="flex-1">
-				<div className="mx-auto flex max-w-178.5 flex-col gap-8 px-4 pb-8 pt-8">
+		<section aria-label="Support chat" className="relative h-full">
+			<ScrollShadow ref={scrollRef} className="h-full" aria-live="polite">
+				{/* Room at the bottom for the input that floats over the chat. */}
+				<div className="mx-auto flex max-w-3xl flex-col gap-6 px-4 pt-8 pb-48 sm:px-6">
 					{messages.length === 0 && (
 						<PromptSuggestions onPick={(text) => void sendTurn(text)} />
 					)}
@@ -94,28 +89,54 @@ export function ChatScreen() {
 						),
 					)}
 					{inFlight && <ThinkingIndicator />}
+					{error && (
+						<Alert status="danger">
+							<Alert.Indicator />
+							<Alert.Content>
+								<Alert.Description>{error}</Alert.Description>
+							</Alert.Content>
+						</Alert>
+					)}
 				</div>
 			</ScrollShadow>
 
-			<div className="shrink-0 bg-neutral-950 px-4 pb-4 pt-3">
-				<div className="mx-auto flex max-w-178.5 flex-col gap-2">
-					{error && <div className="text-sm text-red-400">{error}</div>}
+			{/* The input floats over the chat on a fade, with no bar under it. */}
+			<div className="pointer-events-none absolute inset-x-0 bottom-0 bg-linear-to-t from-background from-20% to-transparent pt-8">
+				<div className="pointer-events-auto mx-auto flex max-w-3xl flex-col gap-2 px-4 pb-3 sm:px-6">
 					{escalated && (
-						<div className="text-center text-sm text-amber-400">
-							A human operator has this conversation now.
-						</div>
+						<Alert status="warning">
+							<Alert.Indicator />
+							<Alert.Content>
+								<Alert.Description>
+									A human operator has this conversation now.
+								</Alert.Description>
+							</Alert.Content>
+						</Alert>
 					)}
 					<PromptInput
 						value={draft}
 						onChange={setDraft}
 						onSubmit={send}
 						loading={inFlight}
+						leading={
+							messages.length > 0 && (
+								<Button
+									size="sm"
+									variant="ghost"
+									isDisabled={inFlight}
+									onPress={() => void onNewChat()}
+								>
+									<RestartIcon className="size-4" />
+									New chat
+								</Button>
+							)
+						}
 					/>
-					<p className="text-center text-xs text-neutral-500">
+					<p className="text-center text-xs text-muted">
 						AI can make mistakes. Check important info.
 					</p>
 				</div>
 			</div>
-		</div>
+		</section>
 	)
 }

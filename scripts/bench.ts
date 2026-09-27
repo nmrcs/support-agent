@@ -1,12 +1,12 @@
 // Replays the reference dialog against a running backend and writes the
 // numbers to bench/runs.md (+ raw JSON next to it). Usage:
-//   npm run bench            8 runs against http://localhost:4001
+//   npm run bench            8 runs against http://localhost:3001
 //   BENCH_RUNS=4 npm run bench
 import { mkdirSync, writeFileSync } from 'node:fs'
 import { join } from 'node:path'
 import type { ChatResponse, LoginResponse } from '@support-agent/contracts'
 
-const BASE = process.env.BACKEND_URL ?? 'http://localhost:4001'
+const BASE = process.env.BACKEND_URL ?? 'http://localhost:3001'
 const RUNS = Number(process.env.BENCH_RUNS ?? 8)
 const EMAIL = 'alice@example.com'
 const PASSWORD = 'demo'

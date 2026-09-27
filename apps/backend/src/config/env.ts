@@ -9,7 +9,7 @@ const envSchema = z.object({
 		.string()
 		.url()
 		.regex(/^postgres(ql)?:\/\//),
-	PORT: z.coerce.number().default(4001),
+	PORT: z.coerce.number().default(3001),
 	LLM_BASE_URL: z.string().url(),
 	LLM_API_KEY: z.string().min(1),
 	LLM_MODEL: z.string().min(1),
@@ -20,7 +20,7 @@ const envSchema = z.object({
 			message: 'AUTH_JWT_SECRET still holds the example value; generate one',
 		}),
 	AUTH_ACCESS_TTL: z.string().default('12h'),
-	FRONTEND_ORIGIN: z.string().url().default('http://localhost:4000'),
+	FRONTEND_ORIGIN: z.string().url().default('http://localhost:3000'),
 })
 
 export type Env = z.infer<typeof envSchema>
